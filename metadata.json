@@ -1,0 +1,6 @@
+{
+  "name": "עולם הנדלן מהלכה למעשה",
+  "description": "ספר לימוד ופורטל קורס מקיף ואינטראקטיבי המציג את כל עולם הנדלן בהתאם לחומר הלימודי של הקורס, כולל מודלים, סימולטורים פיננסיים, וכרטיסיות תרגול ומילים מפתח.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
