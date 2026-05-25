@@ -36,6 +36,54 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isChaptersDropdownOpen, setIsChaptersDropdownOpen] = useState(false);
+  const [isFontPopoverOpen, setIsFontPopoverOpen] = useState(false);
+
+  // Font Size selection state ("sm" | "base" | "lg" | "xl")
+  const [fontSize, setFontSize] = useState<"sm" | "base" | "lg" | "xl">(() => {
+    try {
+      const saved = localStorage.getItem("shiftly_font_size");
+      return (saved as "sm" | "base" | "lg" | "xl") || "base";
+    } catch {
+      return "base";
+    }
+  });
+
+  useEffect(() => {
+    localStorage.setItem("shiftly_font_size", fontSize);
+  }, [fontSize]);
+
+  const fontSizeClasses = {
+    paragraph: {
+      sm: "text-[11px] md:text-xs",
+      base: "text-xs md:text-sm",
+      lg: "text-sm md:text-base",
+      xl: "text-base md:text-lg"
+    },
+    intro: {
+      sm: "text-[11px] md:text-xs font-semibold",
+      base: "text-xs font-semibold",
+      lg: "text-xs md:text-sm font-semibold",
+      xl: "text-sm md:text-base font-semibold"
+    },
+    sectionTitle: {
+      sm: "text-sm md:text-base",
+      base: "text-base md:text-lg",
+      lg: "text-lg md:text-xl",
+      xl: "text-xl md:text-2xl"
+    },
+    keyTermDef: {
+      sm: "text-[10px]",
+      base: "text-[11px]",
+      lg: "text-xs",
+      xl: "text-sm"
+    },
+    accent: {
+      sm: "text-[11px]",
+      base: "text-xs",
+      lg: "text-sm",
+      xl: "text-base"
+    }
+  };
   
   // Interactive student progress (saved in localStorage)
   const [completedChapters, setCompletedChapters] = useState<number[]>(() => {
@@ -501,9 +549,9 @@ export default function App() {
           <div className="max-w-4xl mx-auto w-full bg-white p-6 md:p-10 rounded-[2.5rem] border border-slate-100 shadow-xl space-y-8 min-h-[600px] animate-fade-in">
               
               {/* Header inside the chapter reader */}
-              <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b border-slate-100 pb-6">
+              <div className="flex flex-col md:flex-row justify-between md:items-center gap-4 border-b border-slate-100 pb-6">
                 
-                <div>
+                <div className="flex-1">
                   <div className="flex items-center gap-2">
                     <span className="bg-red-50 text-[#E21E26] border border-[#E21E26]/20 font-black text-[9px] uppercase px-2.5 py-1 rounded-full">
                       פרק {activeChapter.id} מתוך {chaptersData.length}
@@ -514,21 +562,26 @@ export default function App() {
                   <h2 className="text-xl md:text-2xl font-black text-slate-900 mt-2 pb-1 leading-snug">
                      {activeChapter.title}
                   </h2>
-                  <p className="text-slate-500 text-xs font-semibold leading-relaxed mt-1">{activeChapter.intro}</p>
+                  <p className={`text-slate-500 leading-relaxed mt-1 transition-all ${fontSizeClasses.intro[fontSize]}`}>{activeChapter.intro}</p>
                 </div>
 
-                {/* Chapter Completed Button toggle */}
-                <button
-                  onClick={() => toggleChapterComplete(activeChapter.id)}
-                  className={`px-5 py-2 rounded-full font-extrabold text-[11px] transition-all flex items-center gap-1.5 shrink-0 select-none cursor-pointer ${
-                    completedChapters.includes(activeChapter.id)
-                      ? "bg-emerald-100 text-emerald-800 border-transparent"
-                      : "bg-slate-100 text-slate-700 hover:bg-slate-200/80"
-                  }`}
-                >
-                  <CheckCircle className="w-4 h-4" />
-                  <span>{completedChapters.includes(activeChapter.id) ? "מסומן כנקרא" : "סמן כנקרא"}</span>
-                </button>
+                {/* Controls container (Only completed mark) */}
+                <div className="flex items-center gap-3 shrink-0">
+                  
+                  {/* Chapter Completed Button toggle */}
+                  <button
+                    onClick={() => toggleChapterComplete(activeChapter.id)}
+                    className={`px-4 py-2 rounded-full font-extrabold text-[11px] transition-all flex items-center gap-1.5 shrink-0 select-none cursor-pointer ${
+                      completedChapters.includes(activeChapter.id)
+                        ? "bg-emerald-100 text-emerald-800 border-transparent shadow-sm"
+                        : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                    }`}
+                  >
+                    <CheckCircle className="w-3.5 h-3.5" />
+                    <span>{completedChapters.includes(activeChapter.id) ? "מסומן כנקרא" : "סמן כנקרא"}</span>
+                  </button>
+
+                </div>
 
               </div>
 
@@ -545,7 +598,7 @@ export default function App() {
                       <div className="flex justify-between items-center group">
                         <div className="flex items-center gap-2">
                           <span className="w-1.5 h-6 bg-[#E21E26] rounded-full"></span>
-                          <h3 className="text-base md:text-lg font-black text-slate-800 tracking-tight leading-snug">
+                          <h3 className={`font-black text-slate-800 tracking-tight leading-snug transition-all ${fontSizeClasses.sectionTitle[fontSize]}`}>
                             {section.title}
                           </h3>
                         </div>
@@ -562,7 +615,7 @@ export default function App() {
 
                       {/* Accent text highlight if exists */}
                       {section.accentText && (
-                        <div className="p-4 bg-red-50/70 border border-[#E21E26]/20 rounded-2xl text-xs font-extrabold text-[#E21E26] leading-relaxed shadow-sm">
+                        <div className={`p-4 bg-red-50/70 border border-[#E21E26]/20 rounded-2xl font-extrabold text-[#E21E26] leading-relaxed shadow-sm transition-all ${fontSizeClasses.accent[fontSize]}`}>
                           {section.accentText}
                         </div>
                       )}
@@ -575,10 +628,10 @@ export default function App() {
                           return (
                             <p
                               key={pidx}
-                              className={`text-slate-700 text-xs md:text-sm leading-relaxed font-semibold ${
+                              className={`text-slate-700 leading-relaxed font-semibold transition-all ${
                                 isFormula
-                                  ? "p-4 bg-slate-50 border border-slate-100 rounded-2xl font-mono text-center text-indigo-700 text-sm overflow-x-auto shadow-inner"
-                                  : ""
+                                  ? "p-4 bg-slate-50 border border-slate-100 rounded-2xl font-mono text-center text-indigo-700 overflow-x-auto shadow-inner " + (fontSize === "sm" ? "text-xs" : fontSize === "base" ? "text-sm" : fontSize === "lg" ? "text-base" : "text-lg")
+                                  : fontSizeClasses.paragraph[fontSize]
                               }`}
                             >
                               {p}
@@ -595,7 +648,7 @@ export default function App() {
                             {section.keyTerms.map((kt, ktidx) => (
                               <div key={ktidx} className="bg-white p-3 rounded-2xl border border-slate-100 text-xs shadow-sm">
                                 <span className="font-extrabold text-indigo-600 block mb-0.5">{kt.term}</span>
-                                <p className="text-slate-500 text-[11px] leading-normal font-semibold">{kt.definition}</p>
+                                <p className={`text-slate-500 leading-normal font-semibold transition-all ${fontSizeClasses.keyTermDef[fontSize]}`}>{kt.definition}</p>
                               </div>
                             ))}
                           </div>
@@ -716,17 +769,89 @@ export default function App() {
         {/* SELF TESTING ASSESSMENT ZONE */}
         {activeTab === "quiz" && (
           <div className="max-w-3xl mx-auto space-y-8">
-            <QuizCard />
+            <QuizCard fontSize={fontSize} />
           </div>
         )}
 
         {/* GENERAL TERMS SEARCH INTERX */}
         {activeTab === "terms" && (
           <div className="max-w-4xl mx-auto space-y-8">
-            <TermsGlossary />
+            <TermsGlossary fontSize={fontSize} />
           </div>
         )}
 
+      </div>
+
+      {/* Floating Sticky Font Size Selector - Bottom Left Corner */}
+      <div 
+        className="fixed bottom-16 left-4 md:left-6 z-[100] flex flex-col items-center gap-2 select-none"
+        dir="rtl"
+        id="font-size-sticky-container"
+      >
+        {/* Expanded Options Menu */}
+        {isFontPopoverOpen && (
+          <div 
+            className="bg-white/95 backdrop-blur-md border border-slate-200/80 p-1.5 rounded-2xl shadow-2xl flex flex-col items-center gap-1.5 animate-fade-in mb-1"
+            id="font-size-options-panel"
+          >
+            <button
+              onClick={() => { setFontSize("xl"); setIsFontPopoverOpen(false); }}
+              className={`w-8 h-8 rounded-xl text-base transition-all cursor-pointer flex items-center justify-center ${
+                fontSize === "xl" ? "bg-amber-400 text-slate-900 font-black shadow-md" : "text-slate-600 hover:bg-slate-100 font-extrabold"
+              }`}
+              title="גופן ענק (א++)"
+            >
+              א++
+            </button>
+            <button
+              onClick={() => { setFontSize("lg"); setIsFontPopoverOpen(false); }}
+              className={`w-8 h-8 rounded-xl text-sm transition-all cursor-pointer flex items-center justify-center ${
+                fontSize === "lg" ? "bg-amber-400 text-slate-900 font-black shadow-md" : "text-slate-600 hover:bg-slate-100 font-bold"
+              }`}
+              title="גופן גדול (א+)"
+            >
+              א+
+            </button>
+            <button
+              onClick={() => { setFontSize("base"); setIsFontPopoverOpen(false); }}
+              className={`w-8 h-8 rounded-xl text-xs transition-all cursor-pointer flex items-center justify-center ${
+                fontSize === "base" ? "bg-amber-400 text-slate-900 font-black shadow-md" : "text-slate-600 hover:bg-slate-100 font-semibold"
+              }`}
+              title="גופן רגיל (א)"
+            >
+              א
+            </button>
+            <button
+              onClick={() => { setFontSize("sm"); setIsFontPopoverOpen(false); }}
+              className={`w-8 h-8 rounded-xl text-xs transition-all cursor-pointer flex items-center justify-center ${
+                fontSize === "sm" ? "bg-amber-400 text-slate-900 font-black shadow-md" : "text-slate-600 hover:bg-slate-100 font-semibold"
+              }`}
+              title="גופן קטן (א-)"
+            >
+              א-
+            </button>
+          </div>
+        )}
+
+        {/* Main Circular Button representing the current font size */}
+        <button
+          onClick={() => setIsFontPopoverOpen(!isFontPopoverOpen)}
+          className={`w-12 h-12 rounded-full shadow-2xl flex flex-col items-center justify-center border transition-all duration-300 transform hover:scale-105 active:scale-95 cursor-pointer select-none ${
+            isFontPopoverOpen 
+              ? "bg-slate-900 text-amber-300 border-slate-800"
+              : "bg-[#E21E26] text-white border-transparent hover:bg-red-700"
+          }`}
+          title="שינוי גודל גופן"
+          id="btn-font-size-trigger"
+        >
+          <span className="text-[9px] font-black uppercase tracking-wider leading-none mb-0.5">גופן</span>
+          <span className="text-xs font-black leading-none">
+            {fontSize === "sm" && "א-"}
+            {fontSize === "base" && "א"}
+            {fontSize === "lg" && "א+"}
+            {fontSize === "xl" && "א++"}
+          </span>
+        </button>
       </div>
 
       {/* Thin Sticky Bottom Bar for suggestions & feedback */}

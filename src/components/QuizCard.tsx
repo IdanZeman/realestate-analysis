@@ -10,7 +10,28 @@ interface Question {
   explanation: string;
 }
 
-export default function QuizCard() {
+export default function QuizCard({ fontSize = "base" }: { fontSize?: "sm" | "base" | "lg" | "xl" }) {
+  const fontSizes = {
+    question: {
+      sm: "text-xs md:text-sm",
+      base: "text-base",
+      lg: "text-lg",
+      xl: "text-xl font-extrabold"
+    },
+    option: {
+      sm: "text-[11px]",
+      base: "text-xs",
+      lg: "text-sm",
+      xl: "text-base font-semibold"
+    },
+    explanation: {
+      sm: "text-[11px]",
+      base: "text-xs",
+      lg: "text-sm",
+      xl: "text-base"
+    }
+  };
+
   const quizQuestions: Question[] = [
     {
       id: 1,
@@ -233,7 +254,7 @@ export default function QuizCard() {
             <span className="text-[10px] text-indigo-600 font-black uppercase tracking-wider block mb-1">
               נושא: {currentQuestion.chapterTitle} (פרק {currentQuestion.chapterId})
             </span>
-            <h4 className="text-base font-bold text-slate-800 leading-snug">{currentQuestion.text}</h4>
+            <h4 className={`font-bold text-slate-800 leading-snug ${fontSizes.question[fontSize]}`}>{currentQuestion.text}</h4>
           </div>
 
           {/* Options grid */}
@@ -260,14 +281,14 @@ export default function QuizCard() {
                   key={idx}
                   onClick={() => handleOptionClick(idx)}
                   disabled={isAnswered}
-                  className={`w-full text-right p-3.5 rounded-xl border text-xs transition-all flex items-center justify-between ${btnClass}`}
+                  className={`w-full text-right p-3.5 rounded-xl border transition-all flex items-center justify-between ${fontSizes.option[fontSize]} ${btnClass}`}
                 >
                   <span>{option}</span>
                   {isAnswered && idx === currentQuestion.correct && (
-                    <span className="text-emerald-600 font-black">✓ תשובה נכונה</span>
+                    <span className="text-emerald-600 font-black shrink-0 mr-2">✓ תשובה נכונה</span>
                   )}
                   {isAnswered && selectedOption === idx && idx !== currentQuestion.correct && (
-                    <span className="text-red-500 font-black">✗ שגוי</span>
+                    <span className="text-red-500 font-black shrink-0 mr-2">✗ שגוי</span>
                   )}
                 </button>
               );
@@ -278,7 +299,7 @@ export default function QuizCard() {
           {isAnswered && (
             <div className="p-4 bg-emerald-50 border border-emerald-100 rounded-xl text-xs animate-fade-in">
               <span className="font-extrabold text-emerald-900 block mb-1">הסבר מורחב:</span>
-              <p className="text-emerald-800 leading-relaxed font-semibold">{currentQuestion.explanation}</p>
+              <p className={`leading-relaxed font-semibold text-emerald-800 ${fontSizes.explanation[fontSize]}`}>{currentQuestion.explanation}</p>
             </div>
           )}
 

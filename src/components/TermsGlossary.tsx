@@ -1,9 +1,24 @@
 import { useState, useMemo } from "react";
 import { GLOSSARY } from "../courseContent";
 
-export default function TermsGlossary() {
+export default function TermsGlossary({ fontSize = "base" }: { fontSize?: "sm" | "base" | "lg" | "xl" }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("הכל");
+
+  const fontSizes = {
+    term: {
+      sm: "text-xs",
+      base: "text-sm",
+      lg: "text-base",
+      xl: "text-lg"
+    },
+    definition: {
+      sm: "text-[11px]",
+      base: "text-xs",
+      lg: "text-sm",
+      xl: "text-base"
+    }
+  };
 
   const categories = useMemo(() => {
     const list = new Set<string>();
@@ -72,12 +87,12 @@ export default function TermsGlossary() {
             >
               <div>
                 <div className="flex justify-between items-start mb-2">
-                  <span className="font-extrabold text-slate-900 text-sm">{item.term}</span>
+                  <span className={`font-extrabold text-slate-900 ${fontSizes.term[fontSize]}`}>{item.term}</span>
                   <span className="text-[9px] bg-slate-200/60 text-slate-500 font-extrabold px-2 py-0.5 rounded-full">
                     {item.category}
                   </span>
                 </div>
-                <p className="text-slate-600 text-xs font-semibold leading-relaxed">{item.definition}</p>
+                <p className={`text-slate-600 font-semibold leading-relaxed ${fontSizes.definition[fontSize]}`}>{item.definition}</p>
               </div>
             </div>
           ))}
