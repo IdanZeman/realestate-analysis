@@ -759,25 +759,46 @@ export default function App() {
             <div className="pt-8 border-t border-slate-100 flex justify-between items-center text-xs select-none">
               {selectedChapterId > 1 ? (
                 <button
-                  onClick={() => { setSelectedChapterId((id) => id - 1); setTocOpen(false); }}
-                  className="flex items-center gap-1.5 text-slate-500 hover:text-slate-900 font-extrabold cursor-pointer"
+                  onClick={() => { 
+                    setSelectedChapterId((id) => id - 1); 
+                    setTocOpen(false); 
+                    window.scrollTo({ top: 0, behavior: 'smooth' }); 
+                  }}
+                  className="flex items-center gap-1.5 text-slate-500 hover:text-slate-900 font-extrabold cursor-pointer w-1/3 justify-start"
                 >
                   <span>→</span>
                   <span>לפרק הקודם ({selectedChapterId - 1})</span>
                 </button>
-              ) : <div />}
+              ) : <div className="w-1/3" />}
+
+              {/* Progress bar between chapters */}
+              <div className="flex flex-col items-center gap-1.5 w-1/3">
+                <span className="text-[10px] font-black text-slate-400">
+                  פרק {selectedChapterId} מתוך {chaptersData.length}
+                </span>
+                <div className="w-full max-w-[150px] h-2 bg-slate-100 rounded-full overflow-hidden border border-slate-200" dir="ltr">
+                  <div
+                    className="h-full bg-gradient-to-r from-indigo-500 to-[#E21E26] transition-all duration-700 ease-out"
+                    style={{ width: `${(selectedChapterId / chaptersData.length) * 100}%` }}
+                  ></div>
+                </div>
+              </div>
 
               {selectedChapterId < chaptersData.length ? (
                 <button
-                  onClick={() => { setSelectedChapterId((id) => id + 1); setTocOpen(false); }}
-                  className="flex items-center gap-1.5 text-indigo-600 hover:text-indigo-900 font-extrabold cursor-pointer"
+                  onClick={() => { 
+                    setSelectedChapterId((id) => id + 1); 
+                    setTocOpen(false); 
+                    window.scrollTo({ top: 0, behavior: 'smooth' }); 
+                  }}
+                  className="flex items-center gap-1.5 text-indigo-600 hover:text-indigo-900 font-extrabold cursor-pointer w-1/3 justify-end"
                 >
                   <span>לפרק הבא ({selectedChapterId + 1})</span>
                   <span>←</span>
                 </button>
               ) : (
-                <div className="text-[10px] text-emerald-600 font-black uppercase">
-                  הגעת לסוף ספר הלימוד! מומלץ לגשת לסימולטורים.
+                <div className="text-[10px] text-emerald-600 font-black uppercase w-1/3 text-left">
+                  הגעת לסוף ספר הלימוד! מרכז הסימולטורים פתוח.
                 </div>
               )}
             </div>
