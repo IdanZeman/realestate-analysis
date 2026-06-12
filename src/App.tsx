@@ -13,7 +13,8 @@ import {
   Menu,
   X,
   ChevronDown,
-  ClipboardList
+  ClipboardList,
+  XCircle
 } from "lucide-react";
 import { chaptersData, COURSE_TITLE, COURSE_SUBTITLE } from "./courseContent";
 import { chapterSummaries } from "./chapterSummaries";
@@ -642,6 +643,55 @@ export default function App() {
                             <div key={ktidx} className="bg-white p-3 rounded-2xl border border-slate-100 text-xs shadow-sm">
                               <span className="font-extrabold text-indigo-600 block mb-0.5">{kt.term}</span>
                               <p className={`text-slate-500 leading-normal font-semibold transition-all ${fontSizeClasses.keyTermDef[fontSize]}`}>{kt.definition}</p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {section.caseStudy && (
+                      <div className="mt-6 bg-slate-900 border border-slate-800 p-5 md:p-6 rounded-[2rem] shadow-xl text-white">
+                        <div className="flex items-center gap-2 mb-4">
+                          <span className="w-6 h-6 bg-[#E21E26]/20 text-[#E21E26] rounded-lg flex items-center justify-center shrink-0">
+                            <Calculator className="w-3.5 h-3.5" />
+                          </span>
+                          <h4 className="text-sm md:text-base font-black tracking-tight">{section.caseStudy.title}</h4>
+                        </div>
+                        
+                        <div className="bg-slate-800/50 rounded-2xl p-4 mb-5 border border-slate-700/50">
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3">
+                            {section.caseStudy.tableRows.map((row, ridx) => (
+                              <div key={ridx} className="flex justify-between items-center border-b border-slate-700/50 pb-2 last:border-0 last:pb-0">
+                                <div className="flex flex-col text-right w-full">
+                                  <span className="text-slate-300 text-[11px] font-bold">{row.label}</span>
+                                  {row.hint && <span className="text-slate-500 text-[9px] font-semibold">{row.hint}</span>}
+                                </div>
+                                <span className="text-white text-xs font-black tracking-wider w-full text-left" dir="ltr">{row.value}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        <div className="space-y-3">
+                          <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block pr-1 text-right">ממצאי ניתוח והחלטת הבנק:</span>
+                          {section.caseStudy.analysis.map((item, aidx) => (
+                            <div key={aidx} className="bg-slate-800 border border-slate-700 rounded-xl p-3.5 flex flex-col md:flex-row gap-3 md:items-center relative overflow-hidden text-right">
+                              <div className={`absolute right-0 top-0 bottom-0 w-1 ${item.isGood ? "bg-emerald-500" : "bg-red-500"}`}></div>
+                              
+                              <div className="md:w-1/3 shrink-0 pr-3">
+                                <div className="flex items-center gap-2">
+                                  {item.isGood ? <CheckCircle className="w-4 h-4 text-emerald-400" /> : <XCircle className="w-4 h-4 text-red-400" />}
+                                  <span className="text-xs font-extrabold text-white">{item.name}</span>
+                                </div>
+                                <div className="text-indigo-300 font-mono text-[11px] font-black mt-1.5 dir-ltr text-left md:text-right bg-slate-900/50 py-1 px-2 rounded-lg border border-slate-700/50 inline-block" dir="ltr">{item.calc}</div>
+                              </div>
+                              
+                              <div className="md:w-2/3 md:border-r md:border-slate-700 pr-0 md:pr-3">
+                                <p className="text-slate-300 text-[11px] font-semibold leading-relaxed">
+                                  <span className="text-white font-bold mr-1">מסקנה:</span>
+                                  {item.conclusion}
+                                </p>
+                              </div>
                             </div>
                           ))}
                         </div>
