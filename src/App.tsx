@@ -673,7 +673,7 @@ export default function App() {
                         </div>
 
                         <div className="space-y-3">
-                          <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block pr-1 text-right">ממצאי ניתוח והחלטת הבנק:</span>
+                          <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block pr-1 text-right">{section.caseStudy.analysisTitle || "ממצאי ניתוח והחלטת הבנק:"}</span>
                           {section.caseStudy.analysis.map((item, aidx) => (
                             <div key={aidx} className="bg-slate-800 border border-slate-700 rounded-xl p-3.5 flex flex-col md:flex-row gap-3 md:items-center relative overflow-hidden text-right">
                               <div className={`absolute right-0 top-0 bottom-0 w-1 ${item.isGood ? "bg-emerald-500" : "bg-red-500"}`}></div>

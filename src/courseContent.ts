@@ -5,7 +5,8 @@ export interface ChapterSection {
   accentText?: string;
   caseStudy?: {
     title: string;
-    tableRows: { label: string; value: string; hint: string }[];
+    analysisTitle?: string;
+    tableRows: { label: string; value: string; hint?: string }[];
     analysis: { name: string; calc: string; conclusion: string; isGood: boolean }[];
   };
 }
@@ -132,15 +133,16 @@ export const chaptersData: Chapter[] = [
         ],
         caseStudy: {
           title: "מקרה בוחן: חלוקת אקזיט של 200 מיליון ₪ (מודל 80/20)",
+          analysisTitle: "ממצאי ניתוח חלוקת הרווח (לאחר ניכוי פרומוט):",
           tableRows: [
             { label: "הון שהושקע ע\"י LP", value: "90,000,000 ₪", hint: "90% מההשקעה" },
             { label: "הון שהושקע ע\"י GP", value: "10,000,000 ₪", hint: "10% מההשקעה (Skin in the game)" },
             { label: "תמורה לאחר החזר חוב", value: "200,000,000 ₪", hint: "מתוכה 100M רווח לחלוקה" },
-            { label: "מנגנון חלוקת רווחים", value: "20% דמי הצלחה (Promote)", hint: "20% מהרווח העודף הולך ל-GP" }
+            { label: "מנגנון חלוקת רווחים", value: "20% דמי הצלחה (Promote)", hint: "20% מהרווח הולך ל-GP" }
           ],
           analysis: [
-            { name: "תשואת השותף המוגבל (LP)", calc: "90M (קרן) + 72M (רווח 80%)", conclusion: "ה-LP קיבל 162M ₪. מכפיל ההון שלו (Multiple) הוא 1.8x, תשואה ראויה המשקפת את המודל הפאסיבי.", isGood: true },
-            { name: "תשואת השותף הכללי (GP)", calc: "10M (קרן) + 8M (רווח) + 20M (דמי הצלחה)", conclusion: "ה-GP קיבל 38M ₪. מכפיל ההון שלו מגיע ל-3.8x! פרימיום עצום על ניהול מוצלח.", isGood: true }
+            { name: "תשואת השותף המוגבל (LP)", calc: "90M Return + 72M Profit", conclusion: "ה-LP מקבל את הקרן (90M), ועוד 90% מתוך 80M הרווח שנותר (לאחר ש-20M שולמו כדמי הצלחה). סה\"כ 162M. מכפיל הון של 1.8x, תשואה ראויה המשקפת מודל פאסיבי.", isGood: true },
+            { name: "תשואת השותף הכללי (GP)", calc: "10M Return + 20M Promote + 8M Profit", conclusion: "ה-GP מקבל: 1. החזר קרן (10M), 2. דמי הצלחה של 20% מכלל הרווח (20M), 3. חלק יחסי של 10% מ-80M הרווח שנותר (8M). סה\"כ 38M. מכפיל הון פנומנלי של 3.8x!", isGood: true }
           ]
         }
       }
@@ -389,11 +391,22 @@ export const chaptersData: Chapter[] = [
         title: "גישת היוון ההכנסות (Income Approach - DCF / Cap Rate)",
         paragraphs: [
           "הגישה המרכזית והבלעדית להערכת נדל\"ן מניב (משרדים, קניונים, מרכזים לוגיסטיים). שווי הנכס נגזר מהיכולת שלו לייצר הכנסות עתידיות. קיימות שתי תתי-שיטות:",
-          "א. נוסחת שיעור ההיוון הישיר (Direct Capitalization):",
-          "Value = NOI / Cap Rate",
-          "כאשר ה-Cap Rate (שיעור ההיוון) נגזר מעסקאות השוואה בשוק ומשקף את הסיכון המשולב של הסקטור והמיקום .",
-          "ב. מודל תזרים מזומנים מנוכה - Discounted Cash Flow (DCF): ניתוח דינמי מפורט שנה אחר שנה (לרוב לתקופה של 10 שנים). השמאי מזין את חוזי השכירות הקיימים, מניח שיעורי עליית שכר דירה (Bumps / CPI), מנכה שיעורי וקנסי חזויים, עלויות ניהול ותחזוקה, ומחשב את שווי המכירה התאורטי בסוף התקופה (Terminal Value / Exit Cap). כל התזרימים האלו מנוכחים להווה באמצעות שיעור ההיוון הנדרש (WACC / Discount Rate) ."
+          "א. נוסחת שיעור ההיוון הישיר (Direct Capitalization): Value = NOI / Cap Rate",
+          "כאשר ה-Cap Rate (שיעור ההיוון) נגזר מעסקאות השוואה בשוק ומשקף את הסיכון המשולב של הסקטור והמיקום.",
+          "ב. מודל תזרים מזומנים מנוכה - Discounted Cash Flow (DCF): ניתוח דינמי מפורט שנה אחר שנה (לרוב ל-10 שנים). השמאי מהוון להווה את כל התזרימים הצפויים ואת שווי המכירה העתידי (Exit Cap)."
         ],
+        caseStudy: {
+          title: "מקרה בוחן: הערכת שווי מרכז לוגיסטי ואפקט ה-Cap Rate",
+          tableRows: [
+            { label: "רווח תפעולי נקי (NOI)", value: "1,200,000 ₪", hint: "הכנסות שכירות נטו בשנה" },
+            { label: "שיעור היוון נוכחי בסביבה", value: "6.5%", hint: "ה-Cap Rate שנקבע ע\"י השמאי" },
+            { label: "שווי הנכס (Valuation)", value: "18,461,538 ₪", hint: "חישוב: 1.2M חלקי 6.5%" }
+          ],
+          analysis: [
+            { name: "דחיסת היוון (Cap Compression)", calc: "1,200,000 / 5.5% = 21.8M", conclusion: "אם הביקוש יגבר, ה-Cap Rate יידחס (ל-5.5%). שווי הנכס יזנק ביותר מ-3 מיליון ₪ גם ללא שינוי בשכירות!", isGood: true },
+            { name: "התרחבות היוון (Cap Expansion)", calc: "1,200,000 / 7.5% = 16.0M", conclusion: "במשבר ריביות, ה-Cap Rate מתרחב (ל-7.5%). השווי יצנח מיידית, אפילו אם השוכר ממשיך לשלם כרגיל.", isGood: false }
+          ]
+        },
         keyTerms: [
           { term: "Cap Rate (שיעור היוון)", definition: "התשואה השנתית הצפויה מנכס מניב, בהנחת רכישה במזומן מלא (NOI חלקי מחיר הנכס)." },
           { term: "DCF", definition: "מודל מורכב לייוון תזרימי מזומנים עתידיים לערכם הנוכחי הריאלי." }
