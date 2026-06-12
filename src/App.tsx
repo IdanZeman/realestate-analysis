@@ -30,6 +30,57 @@ import QuizCard from "./components/QuizCard";
 import TermsGlossary from "./components/TermsGlossary";
 import FormulaSheet from "./components/FormulaSheet";
 
+const ChapterStepper = ({ 
+  chapters, 
+  selectedId, 
+  onSelect 
+}: { 
+  chapters: { id: number, title: string }[], 
+  selectedId: number, 
+  onSelect: (id: number) => void 
+}) => {
+  return (
+    <div className="w-full flex flex-col items-center select-none pb-6" dir="rtl">
+      <div className="flex items-center justify-between w-full relative">
+        {/* Background line */}
+        <div className="absolute right-0 left-0 top-1/2 h-1 bg-slate-200 -z-10 transform -translate-y-1/2 rounded-full mx-3 md:mx-4"></div>
+        
+        {/* Active progress line (RTL) */}
+        <div 
+          className="absolute right-0 top-1/2 h-1 bg-gradient-to-l from-[#E21E26] to-indigo-500 -z-10 transform -translate-y-1/2 rounded-full mx-3 md:mx-4 transition-all duration-700 ease-out"
+          style={{ width: `calc(${((selectedId - 1) / (chapters.length - 1)) * 100}% - 1.5rem)` }}
+        ></div>
+
+        {chapters.map((ch) => {
+          const isPast = ch.id < selectedId;
+          const isActive = ch.id === selectedId;
+          
+          return (
+            <button
+              key={ch.id}
+              onClick={() => onSelect(ch.id)}
+              className="flex flex-col items-center gap-1 cursor-pointer group focus:outline-none relative"
+              title={`פרק ${ch.id}: ${ch.title}`}
+            >
+              <div 
+                className={`w-7 h-7 md:w-9 md:h-9 rounded-full flex items-center justify-center text-[11px] md:text-sm font-black transition-all duration-300 border-2 z-10 ${
+                  isActive 
+                    ? "bg-white border-[#E21E26] text-[#E21E26] shadow-[0_0_15px_rgba(226,30,38,0.3)] scale-110 md:scale-125" 
+                    : isPast 
+                      ? "bg-indigo-50 border-indigo-500 text-indigo-600 hover:bg-indigo-100" 
+                      : "bg-white border-slate-200 text-slate-400 hover:border-slate-300 hover:bg-slate-50"
+                }`}
+              >
+                {ch.id}
+              </div>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
 export default function App() {
   const [activeTab, setActiveTab] = useState<"read" | "sims" | "quiz" | "terms" | "formulas">("read");
   const [selectedChapterId, setSelectedChapterId] = useState<number>(1);
@@ -531,6 +582,13 @@ export default function App() {
         {activeTab === "read" && (
           <div className="max-w-4xl mx-auto w-full bg-white p-6 md:p-10 rounded-[2.5rem] border border-slate-100 shadow-xl space-y-8 min-h-[600px] animate-fade-in">
 
+            {/* Top Stepper */}
+            <ChapterStepper 
+              chapters={chaptersData} 
+              selectedId={selectedChapterId} 
+              onSelect={(id) => { setSelectedChapterId(id); setTocOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }} 
+            />
+
             {/* Chapter Header */}
             <div className="flex flex-col md:flex-row justify-between md:items-center gap-4 border-b border-slate-100 pb-6">
               <div className="flex-1">
@@ -755,8 +813,17 @@ export default function App() {
               </div>
             )}
 
+            {/* Bottom Stepper */}
+            <div className="pt-8 border-t border-slate-100">
+              <ChapterStepper 
+                chapters={chaptersData} 
+                selectedId={selectedChapterId} 
+                onSelect={(id) => { setSelectedChapterId(id); setTocOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }} 
+              />
+            </div>
+
             {/* Navigation footer */}
-            <div className="pt-8 border-t border-slate-100 flex justify-between items-center text-xs select-none">
+            <div className="pt-6 flex justify-between items-center text-xs select-none">
               {selectedChapterId > 1 ? (
                 <button
                   onClick={() => { 
@@ -764,25 +831,12 @@ export default function App() {
                     setTocOpen(false); 
                     window.scrollTo({ top: 0, behavior: 'smooth' }); 
                   }}
-                  className="flex items-center gap-1.5 text-slate-500 hover:text-slate-900 font-extrabold cursor-pointer w-1/3 justify-start"
+                  className="flex items-center gap-1.5 text-slate-500 hover:text-slate-900 font-extrabold cursor-pointer w-1/2 justify-start"
                 >
                   <span>→</span>
                   <span>לפרק הקודם ({selectedChapterId - 1})</span>
                 </button>
-              ) : <div className="w-1/3" />}
-
-              {/* Progress bar between chapters */}
-              <div className="flex flex-col items-center gap-1.5 w-1/3">
-                <span className="text-[10px] font-black text-slate-400">
-                  פרק {selectedChapterId} מתוך {chaptersData.length}
-                </span>
-                <div className="w-full max-w-[150px] h-2 bg-slate-100 rounded-full overflow-hidden border border-slate-200" dir="ltr">
-                  <div
-                    className="h-full bg-gradient-to-r from-indigo-500 to-[#E21E26] transition-all duration-700 ease-out"
-                    style={{ width: `${(selectedChapterId / chaptersData.length) * 100}%` }}
-                  ></div>
-                </div>
-              </div>
+              ) : <div className="w-1/2" />}
 
               {selectedChapterId < chaptersData.length ? (
                 <button
@@ -791,13 +845,13 @@ export default function App() {
                     setTocOpen(false); 
                     window.scrollTo({ top: 0, behavior: 'smooth' }); 
                   }}
-                  className="flex items-center gap-1.5 text-indigo-600 hover:text-indigo-900 font-extrabold cursor-pointer w-1/3 justify-end"
+                  className="flex items-center gap-1.5 text-indigo-600 hover:text-indigo-900 font-extrabold cursor-pointer w-1/2 justify-end"
                 >
                   <span>לפרק הבא ({selectedChapterId + 1})</span>
                   <span>←</span>
                 </button>
               ) : (
-                <div className="text-[10px] text-emerald-600 font-black uppercase w-1/3 text-left">
+                <div className="text-[10px] text-emerald-600 font-black uppercase w-1/2 text-left">
                   הגעת לסוף ספר הלימוד! מרכז הסימולטורים פתוח.
                 </div>
               )}
