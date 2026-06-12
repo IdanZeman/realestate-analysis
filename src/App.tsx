@@ -164,6 +164,11 @@ export default function App() {
     return chaptersData.find((ch) => ch.id === selectedChapterId) || chaptersData[0];
   }, [selectedChapterId]);
 
+  // Scroll to top on chapter change
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [selectedChapterId]);
+
   // Get bookmarked sections with their data for display
   const bookmarkedSectionData = useMemo(() => {
     return bookmarkedSections.map(key => {
