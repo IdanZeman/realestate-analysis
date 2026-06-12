@@ -3,6 +3,11 @@ export interface ChapterSection {
   paragraphs: string[];
   keyTerms?: { term: string; definition: string }[];
   accentText?: string;
+  caseStudy?: {
+    title: string;
+    tableRows: { label: string; value: string; hint: string }[];
+    analysis: { name: string; calc: string; conclusion: string; isGood: boolean }[];
+  };
 }
 
 export interface Chapter {
@@ -308,7 +313,23 @@ export const chaptersData: Chapter[] = [
           { term: "LTV (Loan to Value)", definition: "היחס בין גובה ההלוואה לשווי הנכס המשמש בטחון שמאות פיננסי." },
           { term: "DSCR", definition: "מדד הבוחן האם התזרים הנקי מהנכס מכסה את תשלומי המשכנתה הבנקאית." },
           { term: "ICR", definition: "יחס המודד את כושר הפירעון של הוצאות הריבית בלבד." }
-        ]
+        ],
+        caseStudy: {
+          title: "מקרה בוחן (Case Study): המחשה מספרית לרכישת בניין משרדים",
+          tableRows: [
+            { label: "שווי שוק של הנכס (Value)", value: "10,000,000 ₪", hint: "נקבע ע\"י שמאי מטעם הבנק" },
+            { label: "גובה ההלוואה (Loan)", value: "7,500,000 ₪", hint: "קרן החוב לבנק" },
+            { label: "הכנסה תפעולית נטו (NOI)", value: "850,000 ₪", hint: "הכנסות משכירות פחות הוצאות תפעול" },
+            { label: "תשלומי ריבית בשנה (Interest)", value: "400,000 ₪", hint: "עלות הכסף" },
+            { label: "תשלומי קרן בשנה (Principal)", value: "200,000 ₪", hint: "נגזר מלוח הסילוקין של ההלוואה" },
+            { label: "סך שירות החוב (קרן + ריבית)", value: "600,000 ₪", hint: "סך התשלומים השנתיים לבנק" }
+          ],
+          analysis: [
+            { name: "בדיקת LTV", calc: "7,500,000 / 10,000,000 = 75%", conclusion: "תקין. היחס נמוך מ-80%. ליזם יש מספיק 'כרית ביטחון' בהון העצמי למקרה שבו שווי הנכס יירד.", isGood: true },
+            { name: "בדיקת DSCR", calc: "850,000 / 600,000 = 1.41", conclusion: "תקין. ההכנסות מהנכס מכסות את תשלומי המשכנתא פעם וחצי כמעט. היחס גבוה מהמינימום (1.20), ליזם נשאר עודף תזרימי חיובי.", isGood: true },
+            { name: "בדיקת ICR", calc: "850,000 / 400,000 = 2.12", conclusion: "תקין. ההכנסות מכסות את הוצאות הריבית למעלה מפעמיים, מה שמעניק לבנק ביטחון רב גם בתרחיש של ירידה בהכנסות.", isGood: true }
+          ]
+        }
       },
       {
         title: "סוגי הלוואות: Recourse מול Non-Recourse",
