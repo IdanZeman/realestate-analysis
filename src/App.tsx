@@ -868,29 +868,31 @@ export default function App() {
                           </div>
                         </div>
 
-                        <div className="space-y-3">
-                          <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block pr-1 text-right">{section.caseStudy.analysisTitle || "ממצאי ניתוח והחלטת הבנק:"}</span>
-                          {section.caseStudy.analysis.map((item, aidx) => (
-                            <div key={aidx} className="bg-slate-800 border border-slate-700 rounded-xl p-3.5 flex flex-col md:flex-row gap-3 md:items-center relative overflow-hidden text-right">
-                              <div className={`absolute right-0 top-0 bottom-0 w-1 ${item.isGood ? "bg-emerald-500" : "bg-red-500"}`}></div>
-                              
-                              <div className="md:w-1/3 shrink-0 pr-3">
-                                <div className="flex items-center gap-2">
-                                  {item.isGood ? <CheckCircle className="w-4 h-4 text-emerald-400" /> : <XCircle className="w-4 h-4 text-red-400" />}
-                                  <span className="text-xs font-extrabold text-white">{item.name}</span>
+                        {section.caseStudy.analysis && section.caseStudy.analysis.length > 0 && (
+                          <div className="space-y-3">
+                            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block pr-1 text-right">{section.caseStudy.analysisTitle || "ממצאי ניתוח והחלטת הבנק:"}</span>
+                            {section.caseStudy.analysis.map((item, aidx) => (
+                              <div key={aidx} className="bg-slate-800 border border-slate-700 rounded-xl p-3.5 flex flex-col md:flex-row gap-3 md:items-center relative overflow-hidden text-right">
+                                <div className={`absolute right-0 top-0 bottom-0 w-1 ${item.isGood ? "bg-emerald-500" : "bg-red-500"}`}></div>
+                                
+                                <div className="md:w-1/3 shrink-0 pr-3">
+                                  <div className="flex items-center gap-2">
+                                    {item.isGood ? <CheckCircle className="w-4 h-4 text-emerald-400" /> : <XCircle className="w-4 h-4 text-red-400" />}
+                                    <span className="text-xs font-extrabold text-white">{item.name}</span>
+                                  </div>
+                                  <div className="text-indigo-300 font-mono text-[11px] font-black mt-1.5 dir-ltr text-left md:text-right bg-slate-900/50 py-1 px-2 rounded-lg border border-slate-700/50 inline-block" dir="ltr">{item.calc}</div>
                                 </div>
-                                <div className="text-indigo-300 font-mono text-[11px] font-black mt-1.5 dir-ltr text-left md:text-right bg-slate-900/50 py-1 px-2 rounded-lg border border-slate-700/50 inline-block" dir="ltr">{item.calc}</div>
+                                
+                                <div className="md:w-2/3 md:border-r md:border-slate-700 pr-0 md:pr-3">
+                                  <p className="text-slate-300 text-[11px] font-semibold leading-relaxed">
+                                    <span className="text-white font-bold mr-1">מסקנה:</span>
+                                    {item.conclusion}
+                                  </p>
+                                </div>
                               </div>
-                              
-                              <div className="md:w-2/3 md:border-r md:border-slate-700 pr-0 md:pr-3">
-                                <p className="text-slate-300 text-[11px] font-semibold leading-relaxed">
-                                  <span className="text-white font-bold mr-1">מסקנה:</span>
-                                  {item.conclusion}
-                                </p>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
+                            ))}
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>
