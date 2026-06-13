@@ -681,22 +681,155 @@ export default function App() {
                     )}
 
                     <div className="space-y-3.5 pl-2">
-                      {section.paragraphs.map((p, pidx) => {
-                        const isFormula = p.includes("=") || p.includes("*") || p.includes("+");
-                        return (
-                          <p
-                            key={pidx}
-                            className={`text-slate-700 leading-relaxed font-semibold transition-all ${
-                              isFormula
-                                ? "p-4 bg-slate-50 border border-slate-100 rounded-2xl font-mono text-center text-indigo-700 overflow-x-auto shadow-inner " + (fontSize === "sm" ? "text-xs" : fontSize === "base" ? "text-sm" : fontSize === "lg" ? "text-base" : "text-lg")
-                                : fontSizeClasses.paragraph[fontSize]
-                            }`}
-                          >
-                            {p}
-                          </p>
-                        );
-                      })}
+                      {section.paragraphs.map((p, pidx) => (
+                        <p
+                          key={pidx}
+                          className={`text-slate-700 leading-relaxed font-semibold transition-all ${fontSizeClasses.paragraph[fontSize]}`}
+                        >
+                          {p}
+                        </p>
+                      ))}
                     </div>
+
+                    {section.metricComparison && (
+                      <div className="mt-5 space-y-4">
+                        {section.metricComparison.intro && (
+                          <p className={`text-slate-600 font-bold leading-relaxed ${fontSizeClasses.paragraph[fontSize]}`}>
+                            {section.metricComparison.intro}
+                          </p>
+                        )}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          {section.metricComparison.metrics.map((m, midx) => {
+                            const palettes = {
+                              indigo: {
+                                card: "bg-indigo-50 border-indigo-200",
+                                badge: "bg-indigo-600 text-white",
+                                formula: "bg-indigo-900 text-indigo-100 border-indigo-700",
+                                example: "bg-white border-indigo-100 text-indigo-700",
+                                result: "text-indigo-700 bg-indigo-100 border-indigo-200",
+                                takeaway: "text-indigo-800",
+                                sub: "text-indigo-500"
+                              },
+                              green: {
+                                card: "bg-emerald-50 border-emerald-200",
+                                badge: "bg-emerald-600 text-white",
+                                formula: "bg-emerald-900 text-emerald-100 border-emerald-700",
+                                example: "bg-white border-emerald-100 text-emerald-700",
+                                result: "text-emerald-700 bg-emerald-100 border-emerald-200",
+                                takeaway: "text-emerald-800",
+                                sub: "text-emerald-500"
+                              },
+                              blue: {
+                                card: "bg-blue-50 border-blue-200",
+                                badge: "bg-blue-600 text-white",
+                                formula: "bg-blue-900 text-blue-100 border-blue-700",
+                                example: "bg-white border-blue-100 text-blue-700",
+                                result: "text-blue-700 bg-blue-100 border-blue-200",
+                                takeaway: "text-blue-800",
+                                sub: "text-blue-500"
+                              },
+                              amber: {
+                                card: "bg-amber-50 border-amber-200",
+                                badge: "bg-amber-600 text-white",
+                                formula: "bg-amber-900 text-amber-100 border-amber-700",
+                                example: "bg-white border-amber-100 text-amber-700",
+                                result: "text-amber-700 bg-amber-100 border-amber-200",
+                                takeaway: "text-amber-800",
+                                sub: "text-amber-500"
+                              }
+                            };
+                            const p = palettes[m.color];
+                            return (
+                              <div key={midx} className={`rounded-2xl border-2 p-4 md:p-5 space-y-3 shadow-sm ${p.card}`}>
+                                {/* Header */}
+                                <div className="flex items-center gap-3">
+                                  <span className={`text-lg font-black px-3 py-1 rounded-xl tracking-tight ${p.badge}`}>{m.name}</span>
+                                  <span className={`text-xs font-bold leading-tight ${p.sub}`}>{m.subtitle}</span>
+                                </div>
+
+                                {/* Formula */}
+                                <div>
+                                  <span className="text-[9px] font-black uppercase tracking-widest text-slate-400 block mb-1">נוסחה</span>
+                                  <div className={`rounded-xl border px-3 py-2.5 font-mono text-sm font-black text-center tracking-wide ${p.formula}`} dir="ltr">
+                                    {m.formula}
+                                  </div>
+                                </div>
+
+                                {/* Example */}
+                                <div>
+                                  <span className="text-[9px] font-black uppercase tracking-widest text-slate-400 block mb-1">דוגמה מספרית</span>
+                                  <div className={`rounded-xl border px-3 py-2 font-mono text-xs font-bold text-center ${p.example}`} dir="ltr">
+                                    {m.example}
+                                  </div>
+                                </div>
+
+                                {/* Result */}
+                                <div className={`rounded-xl border px-3 py-2 text-center font-black text-sm tracking-wide ${p.result}`} dir="ltr">
+                                  {m.result}
+                                </div>
+
+                                {/* Takeaway */}
+                                <div className={`text-xs font-semibold leading-relaxed pt-1 border-t border-current/10 ${p.takeaway}`}>
+                                  💡 {m.takeaway}
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                        {section.metricComparison.footer && (
+                          <div className="bg-slate-100 border border-slate-200 rounded-xl px-4 py-3 text-center text-xs font-bold text-slate-600 tracking-tight">
+                            {section.metricComparison.footer}
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    {section.comparisonTable && (() => {
+                      const ct = section.comparisonTable!;
+                      const colPalette = {
+                        indigo: { header: "bg-indigo-600 text-white", cell: "bg-indigo-50 text-indigo-900", badge: "bg-indigo-100 text-indigo-700 border-indigo-200" },
+                        emerald: { header: "bg-emerald-600 text-white", cell: "bg-emerald-50 text-emerald-900", badge: "bg-emerald-100 text-emerald-700 border-emerald-200" },
+                        amber: { header: "bg-amber-500 text-white", cell: "bg-amber-50 text-amber-900", badge: "bg-amber-100 text-amber-700 border-amber-200" },
+                        rose: { header: "bg-rose-600 text-white", cell: "bg-rose-50 text-rose-900", badge: "bg-rose-100 text-rose-700 border-rose-200" },
+                      };
+                      const pA = colPalette[ct.colorA];
+                      const pB = colPalette[ct.colorB];
+                      return (
+                        <div className="mt-5 rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+                          {/* Table header */}
+                          <div className="grid grid-cols-[1fr_2fr_2fr] text-xs font-black">
+                            <div className="bg-slate-800 text-slate-300 px-3 py-3 flex items-center">פרמטר</div>
+                            <div className={`px-3 py-3 text-center ${pA.header}`}>{ct.labelA}</div>
+                            <div className={`px-3 py-3 text-center ${pB.header}`}>{ct.labelB}</div>
+                          </div>
+                          {/* Rows */}
+                          {ct.rows.map((row, ridx) => (
+                            <div key={ridx} className={`grid grid-cols-[1fr_2fr_2fr] text-[11px] border-t border-slate-100 ${ridx % 2 === 0 ? "bg-white" : "bg-slate-50/60"}`}>
+                              <div className="px-3 py-2.5 font-black text-slate-700 flex items-center gap-1.5">
+                                {row.winner === "A" && <span className="w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0" title="יתרון לנדלן" />}
+                                {row.winner === "B" && <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 shrink-0" title="יתרון לשוק ההון" />}
+                                {row.winner === "tie" && <span className="w-1.5 h-1.5 rounded-full bg-slate-300 shrink-0" />}
+                                {row.feature}
+                              </div>
+                              <div className={`px-3 py-2.5 font-semibold leading-snug border-r border-slate-100 ${row.winner === "A" ? pA.cell + " font-bold" : "text-slate-600"}`}>
+                                {row.winner === "A" && <span className="text-[9px] font-black text-amber-600 block mb-0.5">✓ יתרון</span>}
+                                {row.optionA}
+                              </div>
+                              <div className={`px-3 py-2.5 font-semibold leading-snug ${row.winner === "B" ? pB.cell + " font-bold" : "text-slate-600"}`}>
+                                {row.winner === "B" && <span className="text-[9px] font-black text-indigo-600 block mb-0.5">✓ יתרון</span>}
+                                {row.optionB}
+                              </div>
+                            </div>
+                          ))}
+                          {/* Footer */}
+                          {ct.footer && (
+                            <div className="bg-slate-800 text-slate-200 text-[11px] font-bold px-4 py-3 text-center leading-relaxed">
+                              {ct.footer}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })()}
 
                     {section.keyTerms && section.keyTerms.length > 0 && (
                       <div className="mt-4 bg-slate-50/70 border border-slate-100 p-4 rounded-3xl space-y-2.5 shadow-sm">
@@ -727,7 +860,7 @@ export default function App() {
                               <div key={ridx} className="flex justify-between items-center border-b border-slate-700/50 pb-2 last:border-0 last:pb-0">
                                 <div className="flex flex-col text-right w-full">
                                   <span className="text-slate-300 text-[11px] font-bold">{row.label}</span>
-                                  {row.hint && <span className="text-slate-500 text-[9px] font-semibold">{row.hint}</span>}
+                                  {row.hint && <span className="text-slate-400 text-[10px] font-semibold">{row.hint}</span>}
                                 </div>
                                 <span className="text-white text-xs font-black tracking-wider w-full text-left" dir="ltr">{row.value}</span>
                               </div>

@@ -18,3 +18,9 @@ View your app in AI Studio: https://ai.studio/apps/df561a4a-f1b6-491a-88fc-ced83
 2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
 3. Run the app:
    `npm run dev`
+
+## Features & Simulators
+
+- **Interactive Textbook**: Learn advanced real estate finance.
+- **Chapter 8 Residual Value Simulator**: Step-by-step extraction model visualization using Waterfall, Stacked Bar, and Pie charts via Recharts.
+- **Multiple Financial Calculators**: Waterfall GP/LP, Leverage, NNN Comparison, etc.
